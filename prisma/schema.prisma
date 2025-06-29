@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Lead {
+  id          Int      @id @default(autoincrement())
+  name        String
+  contactInfo String
+  status      String
+  assignedTo  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Client {
+  id          Int      @id @default(autoincrement())
+  name        String
+  contactInfo String
+  company     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Car {
+  id              Int      @id @default(autoincrement())
+  vin             String   @unique
+  make            String
+  model           String
+  year            Int
+  status          String
+  price           Float
+  acquisitionDate DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Proposal {
+  id            Int      @id @default(autoincrement())
+  clientId      Int
+  carId         Int
+  proposedPrice Float
+  status        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([clientId])
+  @@index([carId])
+}
+
+model Acquisition {
+  id              Int      @id @default(autoincrement())
+  source          String
+  carId           Int
+  acquisitionCost Float
+  date            DateTime
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([carId])
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String
+  createdAt    DateTime @default(now())
+}
